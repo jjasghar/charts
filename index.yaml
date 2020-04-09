@@ -1,0 +1,31 @@
+apiVersion: v1
+entries:
+  huginn:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2020-04-09T21:30:06.229018724Z"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 8.7.3
+    description: A Helm chart for Kubernetes
+    digest: 0aa350ab2bd27f5ddd710601e3eedc45ba2723b9420f5d413d6696d2715735b2
+    home: https://github.com/huginn/huginn
+    keywords:
+    - ruby
+    - huginn
+    - automation
+    maintainers:
+    - email: jjasghar@gmail.com
+      name: jjasghar
+    - email: username.taken@gmail.com
+      name: paulczar
+    name: huginn
+    sources:
+    - https://github.com/huginn/huginn
+    type: application
+    urls:
+    - https://github.com/jjasghar/charts/releases/download/huginn-0.1.1/huginn-0.1.1.tgz
+    version: 0.1.1
+generated: "2020-04-09T21:30:06.13689199Z"
