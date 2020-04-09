@@ -5,7 +5,18 @@ type: application
 version: 0.1.1
 # this is not the real version, it looks via git shas?
 appVersion: 1.16.0
-
+home: https://github.com/huginn/huginn
+maintainers:
+  - name: jjasghar
+    email: jjasghar@gmail.com
+  - name: paulczar
+    email: username.taken@gmail.com
+sources:
+  - https://github.com/huginn/huginn
+keywords:
+  - ruby
+  - huginn
+  - automation
 dependencies:
 - name: postgresql
   version: "8.7.3"
