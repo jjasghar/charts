@@ -30,50 +30,145 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default "latest" }}"
           env:
-            {{ with .Values.postgresql }}
+            - name: APP_SECRET_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "huginn.fullname" . }}
+                  key: "app_secret_token"
+            - name: INVITATION_CODE
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "huginn.fullname" . }}
+                  key: "invitation_code"
+            {{- if .Values.postgresql.enabled }}
+              {{ with .Values.postgresql }}
             - name: HUGINN_DATABASE_NAME
-              value: "{{ .postgresqlDatabase }}"
+              value: {{ .postgresqlDatabase | quote }}
             - name: HUGINN_DATABASE_USERNAME
-              value: "{{ .postgresqlUsername }}"
-            - name: HUGINN_DATABASE_PASSWORD
-              value: "{{ .postgresqlPassword }}"
-            {{ end }}
-            - name: DATABASE_ADAPTER
-              value: postgresql
+              value: {{ .postgresqlUsername | quote }}
+              {{ end }}
             - name: DATABASE_HOST
               value: "{{ .Release.Name }}-postgresql"
             - name: DATABASE_PORT
               value: "5432"
-            - name: INVITATION_CODE
-              value: "{{ .Values.invitationCode }}"
+            - name: DATABASE_ADAPTER
+              value: postgresql
+            {{- else }}
+              {{ with .Values.externalDatabase }}
+            - name: HUGINN_DATABASE_NAME
+              value: {{ .database | quote }}
+            - name: HUGINN_DATABASE_USERNAME
+              value: {{ .user | quote }}
+            - name: DATABASE_HOST
+              value: {{ .host | quote }}
+            - name: DATABASE_PORT
+              value: {{ .port | quote }}
+              {{ end }}
+              {{- if eq .Values.externalDatabase.type "postgresql" }}
+            - name: DATABASE_ADAPTER
+              value: postgresql
+              {{- else }}
+            - name: DATABASE_ADAPTER
+              value: mysql
+              {{- end }}
+            {{- end }}
+            - name: HUGINN_DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "huginn.fullname" . }}
+                  key: "database_password"
             - name: SMTP_DOMAIN
-              value: "{{ .Values.smtp.domain }}"
+              value: {{ .Values.smtp.domain | quote }}
             - name: SMTP_USER_NAME
-              value: "{{ .Values.smtp.username }}"
+              value: {{ .Values.smtp.username | quote }}
             - name: SMTP_PASSWORD
-              value: "{{ .Values.smtp.password }}"
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "huginn.fullname" . }}
+                  key: "smtp_password"
             - name: SMTP_SERVER
-              value: "{{ .Values.smtp.server }}"
+              value: {{ .Values.smtp.server | quote }}
             - name: SMTP_PORT
-              value: "{{ .Values.smtp.port }}"
+              value: {{ .Values.smtp.port }}
             - name: SMTP_AUTHENTICATION
-              value: "{{ .Values.smtp.authentication }}"
+              value: {{ .Values.smtp.authentication | quote }}
             - name: SMTP_ENABLE_STARTTLS_AUTO
-              value: "{{ .Values.smtp.enableStartttlAuto }}"
+              value: {{ .Values.smtp.enableStartttlAuto | quote }}
             - name: EMAIL_FROM_ADDRESS
-              value: "{{ .Values.emailFromAddress }}"
+              value: {{ .Values.emailFromAddress | quote }}
+            {{- if .Values.oauth.twitter.enabled }}
             - name: TWITTER_OAUTH_KEY
-              value: "{{ .Values.oauth.twitterOauthKey }}"
+              value: {{ .Values.oauth.twitter.key | quote }}
             - name: TWITTER_OAUTH_SECRET
-              value: "{{ .Values.oauth.twitterOauthSecret }}"
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "huginn.fullname" . }}
+                  key: "twitter_oauth_secret"
+            {{- end }}
+            {{- if .Values.oauth.thirty_seven_signals.enabled }}
+            - name: THIRTY_SEVEN_SIGNALS_OAUTH_KEY
+              value: {{ .Values.oauth.thirty_seven_signals.key | quote }}
+            - name: THIRTY_SEVEN_SIGNALS_OAUTH_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "huginn.fullname" . }}
+                  key: "thirty_seven_signals_oauth_secret"
+            {{- end }}
+            {{- if .Values.oauth.github.enabled }}
             - name: GITHUB_OAUTH_KEY
-              value: "{{ .Values.oauth.githubOauthKey }}"
+              value: {{ .Values.oauth.github.key | quote }}
             - name: GITHUB_OAUTH_SECRET
-              value: "{{ .Values.oauth.githubOauthSecret }}"
-            # - name: REQUIRE_CONFIRMED_EMAIL
-            #   value: "{{ .Values.requireConfirmedEmail }}"
-            # - name: ALLOW_UNCONFIRMED_ACCESS_FOR
-            #   value: "{{ .Values.allowUnconfirmedAccessFor }}"
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "huginn.fullname" . }}
+                  key: "github_oauth_secret"
+            {{- end }}
+            {{- if .Values.oauth.tumblr.enabled }}
+            - name: TUMBLR_OAUTH_KEY
+              value: {{ .Values.oauth.tumblr.key | quote }}
+            - name: TUMBLR_OAUTH_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "huginn.fullname" . }}
+                  key: "tumblr_oauth_secret"
+            {{- end }}
+            {{- if .Values.oauth.dropbox.enabled }}
+            - name: DROPBOX_OAUTH_KEY
+              value: {{ .Values.oauth.dropbox.key | quote }}
+            - name: DROPBOX_OAUTH_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "huginn.fullname" . }}
+                  key: "dropbox_oauth_secret"
+            {{- end }}
+            {{- if .Values.oauth.wunderlist.enabled }}
+            - name: WUNDERLIST_OAUTH_KEY
+              value: {{ .Values.oauth.wunderlist.key | quote }}
+            - name: WUNDERLIST_OAUTH_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "huginn.fullname" . }}
+                  key: "wunderlist_oauth_secret"
+            {{- end }}
+            {{- if .Values.oauth.evernote.enabled }}
+            - name: EVERNOTE_OAUTH_KEY
+              value: {{ .Values.oauth.evernote.key | quote }}
+            - name: EVERNOTE_OAUTH_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "huginn.fullname" . }}
+                  key: "evernote_oauth_secret"
+            - name: USE_EVERNOTE_SANDBOX
+              value: {{ .Values.oauth.evernote.use_sandbox }}
+            {{- end }}
+            {{- if .Values.requireConfirmedEmail }}
+            - name: REQUIRE_CONFIRMED_EMAIL
+              value: {{ .Values.requireConfirmedEmail | quote }}
+            {{- end }}
+            {{- if .Values.allowUnconfirmedAccessFor }}
+            - name: ALLOW_UNCONFIRMED_ACCESS_FOR
+              value: {{ .Values.allowUnconfirmedAccessFor | quote }}
+            {{- end }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
