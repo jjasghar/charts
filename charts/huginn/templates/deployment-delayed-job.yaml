@@ -65,13 +65,13 @@ spec:
               value: {{ .host | quote }}
             - name: DATABASE_PORT
               value: {{ .port | quote }}
-              {{ end }}
+              {{- end }}
               {{- if eq .Values.externalDatabase.type "postgresql" }}
             - name: DATABASE_ADAPTER
               value: postgresql
               {{- else }}
             - name: DATABASE_ADAPTER
-              value: mysql
+              value: mysql2
               {{- end }}
             {{- end }}
             - name: HUGINN_DATABASE_PASSWORD

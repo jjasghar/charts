@@ -63,13 +63,13 @@ spec:
               value: {{ .host | quote }}
             - name: DATABASE_PORT
               value: {{ .port | quote }}
-              {{ end }}
+              {{- end }}
               {{- if eq .Values.externalDatabase.type "postgresql" }}
             - name: DATABASE_ADAPTER
               value: postgresql
               {{- else }}
             - name: DATABASE_ADAPTER
-              value: mysql
+              value: mysql2
               {{- end }}
             {{- end }}
             - name: HUGINN_DATABASE_PASSWORD
@@ -89,7 +89,7 @@ spec:
             - name: SMTP_SERVER
               value: {{ .Values.smtp.server | quote }}
             - name: SMTP_PORT
-              value: {{ .Values.smtp.port }}
+              value: {{ .Values.smtp.port | quote }}
             - name: SMTP_AUTHENTICATION
               value: {{ .Values.smtp.authentication | quote }}
             - name: SMTP_ENABLE_STARTTLS_AUTO

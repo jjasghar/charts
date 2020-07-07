@@ -24,7 +24,7 @@ fullnameOverride: ""
 externalDatabase:
   enabled: false
   ## Supported database engines: mysql or postgresql
-  type: mysql
+  type: mysql2
   ## Database host
   host: localhost
   ## Database port

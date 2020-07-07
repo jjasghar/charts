@@ -65,13 +65,14 @@ spec:
               value: {{ .host | quote }}
             - name: DATABASE_PORT
               value: {{ .port | quote }}
-              {{ end }}
+              {{- end }}
               {{- if eq .Values.externalDatabase.type "postgresql" }}
             - name: DATABASE_ADAPTER
               value: postgresql
               {{- else }}
             - name: DATABASE_ADAPTER
-              value: mysql
+              value: mysql2
+              {{- end }}
             {{- end }}
             - name: HUGINN_DATABASE_PASSWORD
               valueFrom:
@@ -79,24 +80,24 @@ spec:
                   name: {{ include "huginn.fullname" . }}
                   key: "database_password"
             - name: SMTP_DOMAIN
-              value: "{{ .Values.smtp.domain }}"
+              value: {{ .Values.smtp.domain | quote }}
             - name: SMTP_USER_NAME
-              value: "{{ .Values.smtp.username }}"
+              value: {{ .Values.smtp.username | quote}}
             - name: SMTP_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: {{ include "huginn.fullname" . }}
                   key: "smtp_password"
             - name: SMTP_SERVER
-              value: "{{ .Values.smtp.server }}"
+              value: {{ .Values.smtp.server | quote }}
             - name: SMTP_PORT
-              value: "{{ .Values.smtp.port }}"
+              value: {{ .Values.smtp.port | quote }}
             - name: SMTP_AUTHENTICATION
-              value: "{{ .Values.smtp.authentication }}"
+              value: {{ .Values.smtp.authentication | quote }}
             - name: SMTP_ENABLE_STARTTLS_AUTO
-              value: "{{ .Values.smtp.enableStartttlAuto }}"
+              value: {{ .Values.smtp.enableStartttlAuto | quote }}
             - name: EMAIL_FROM_ADDRESS
-              value: "{{ .Values.emailFromAddress }}"
+              value: {{ .Values.emailFromAddress | quote }}
             {{- if .Values.oauth.twitter.enabled }}
             - name: TWITTER_OAUTH_KEY
               value: {{ .Values.oauth.twitter.key | quote }}
@@ -170,6 +171,7 @@ spec:
             - name: ALLOW_UNCONFIRMED_ACCESS_FOR
               value: "{{ .Values.allowUnconfirmedAccessFor }}"
             {{- end }}
+            {{- if .Values.requireConfirmedEmail }}
             - name: REQUIRE_CONFIRMED_EMAIL
               value: "{{ .Values.requireConfirmedEmail }}"
             {{- end }}
