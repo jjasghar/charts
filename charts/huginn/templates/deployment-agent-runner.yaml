@@ -77,6 +77,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: {{ include "huginn.fullname" . }}
+                  key: "database_password"
             - name: SMTP_DOMAIN
               value: "{{ .Values.smtp.domain }}"
             - name: SMTP_USER_NAME

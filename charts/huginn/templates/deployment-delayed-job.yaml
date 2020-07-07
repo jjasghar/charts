@@ -48,8 +48,6 @@ spec:
               value: {{ .postgresqlDatabase | quote }}
             - name: HUGINN_DATABASE_USERNAME
               value: {{ .postgresqlUsername | quote }}
-            - name: HUGINN_DATABASE_PASSWORD
-              value: {{ .postgresqlPassword | quote }}
               {{ end }}
             - name: DATABASE_HOST
               value: "{{ .Release.Name }}-postgresql"
@@ -63,8 +61,6 @@ spec:
               value: {{ .database | quote }}
             - name: HUGINN_DATABASE_USERNAME
               value: {{ .user | quote }}
-            - name: HUGINN_DATABASE_PASSWORD
-              value: {{ .password | quote }}
             - name: DATABASE_HOST
               value: {{ .host | quote }}
             - name: DATABASE_PORT
