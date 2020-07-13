@@ -52,6 +52,13 @@ postgresql:
     accessMode: ReadWriteOnce
     size: 8Gi
 
+# This is the domain where your Huginn instance will be running. The default should work
+# for development, but it needs to be changed to your Huginn domain when you deploy to a
+# production environment (e.g., yourdomain.com, possibly including a port).
+app:
+  domain: localhost
+  port: 3000
+
 ## Replace the following with the output from "rake secret" (or a 64 character random string)
 secret_token: 
 

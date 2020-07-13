@@ -1,3 +1,4 @@
+{{-  $domain := printf "%s:%.0f" .Values.app.domain .Values.service.port -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -40,6 +41,10 @@ spec:
                 secretKeyRef:
                   name: {{ include "huginn.fullname" . }}
                   key: "invitation_code"
+            - name: DOMAIN
+              value: {{ $domain | quote }}
+            - name: PORT
+              value: {{ .Values.app.port | quote }}
             {{- if .Values.postgresql.enabled }}
               {{ with .Values.postgresql }}
             - name: HUGINN_DATABASE_NAME
@@ -172,7 +177,7 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
-              containerPort: 3000
+              containerPort: {{ .Values.app.port }}
               protocol: TCP
           livenessProbe:
             httpGet:
