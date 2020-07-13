@@ -1,6 +1,11 @@
-{{- if eq .Values.invitationCode "Please-Change-Me" }}
+{{- if not .Values.invitationCode }}
 ****************************************
-Please change the invitation code in the values.yml, and anything else you may have missed.
+Please change the invitation code `invitationCode` in the values.yml, and anything else you may have missed.
+****************************************
+{{- end }}
+{{- if not .Values.secret_token }}
+****************************************
+Please change the secret token `secret_token` in the values.yml, and anything else you may have missed.
 ****************************************
 {{- end }}
 {{- if eq .Values.smtp.password "somepassword" }}
@@ -8,14 +13,39 @@ Please change the invitation code in the values.yml, and anything else you may h
 Please change the SMTP settings for your email server. Without a correct setting for huginn email won't work, with will cause multiple features to work incorrectly.
 ****************************************
 {{- end }}
-{{- if eq .Values.oauth.twitterOauthKey "fillout" }}
+{{- if and .Values.oauth.twitter.enabled (eq .Values.oauth.twitter.key "") }}
 ****************************************
 If you are planning on using the Twitter API or OAuth, please fill out the `oauth.twitter` lines. Otherwise you can ignore this message.
 ****************************************
 {{- end }}
-{{- if eq .Values.oauth.githubOauthKey "fillout" }}
+{{- if and .Values.oauth.github.enabled (eq .Values.oauth.github.key "") }}
 ****************************************
 If you are planning on using the GitHub API or OAuth, please fill out the `oauth.github` lines. Otherwise you can ignore this message.
+****************************************
+{{- end }}
+{{- if and .Values.oauth.thirty_seven_signals.enabled (eq .Values.oauth.thirty_seven_signals.key "") }}
+****************************************
+If you are planning on using the Thirty Seven Signals API or OAuth, please fill out the `oauth.thirty_seven_signals` lines. Otherwise you can ignore this message.
+****************************************
+{{- end }}
+{{- if and .Values.oauth.tumblr.enabled (eq .Values.oauth.tumblr.key "") }}
+****************************************
+If you are planning on using the Tumblr API or OAuth, please fill out the `oauth.tumblr` lines. Otherwise you can ignore this message.
+****************************************
+{{- end }}
+{{- if and .Values.oauth.dropbox.enabled (eq .Values.oauth.dropbox.key "") }}
+****************************************
+If you are planning on using the Dropbox API or OAuth, please fill out the `oauth.dropbox` lines. Otherwise you can ignore this message.
+****************************************
+{{- end }}
+{{- if and .Values.oauth.wunderlist.enabled (eq .Values.oauth.wunderlist.key "") }}
+****************************************
+If you are planning on using the Wunderlist API or OAuth, please fill out the `oauth.wunderlist` lines. Otherwise you can ignore this message.
+****************************************
+{{- end }}
+{{- if and .Values.oauth.evernote.enabled (eq .Values.oauth.evernote.key "") }}
+****************************************
+If you are planning on using the Evernote API or OAuth, please fill out the `oauth.evernote` lines. Otherwise you can ignore this message.
 ****************************************
 {{- end }}
 1. Get the application URL by running these commands:

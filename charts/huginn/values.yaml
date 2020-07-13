@@ -1,6 +1,6 @@
-# Default values for huginn.
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
+## Default values for huginn.
+## This is a YAML-formatted file.
+## Declare variables to be passed into your templates.
 
 web:
   replicaCount: 1
@@ -18,28 +18,63 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
+##
+## External database configuration
+##
+externalDatabase:
+  enabled: false
+  ## Supported database engines: mysql or postgresql
+  type: mysql2
+  ## Database host
+  host: localhost
+  ## Database port
+  port: 3306
+  ## Database user
+  user: nextcloud
+  ## Database password
+  password: ""
+  ## Database name
+  database: nextcloud
+
 postgresql:
+  ## Whether to deploy a postgres server to satisfy the applications database requirements.
+  ## To use an external database set this to false and configure the externalDatabase parameters
   enabled: true
   postgresqlPostgresPassword: "SuperS3cr3t"
   postgresqlDatabase: "huginn"
   postgresqlUsername: "huginn"
   postgresqlPassword: "hug1nnpAssw0rd"
+  ## Enable persistence using Persistent Volume Claims
+  ## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
+  ##
   persistence:
     enabled: false
+    accessMode: ReadWriteOnce
+    size: 8Gi
 
+# This is the domain where your Huginn instance will be running. The default should work
+# for development, but it needs to be changed to your Huginn domain when you deploy to a
+# production environment (e.g., yourdomain.com, possibly including a port).
+app:
+  domain: localhost
+  port: 3000
 
-#
-# Please change this ASAP, and before you deploy this app.
-#
-invitationCode: "Please-Change-Me"
+## Replace the following with the output from "rake secret" (or a 64 character random string)
+secret_token: 
 
-# If you'd like to require new users to confirm their email address after sign up, set this to true.
+##
+## This invitation code will be required for users to signup with your Huginn installation.
+## You can see its use in user.rb.  PLEASE CHANGE THIS!
+##
+invitationCode:
+
+## If you'd like to require new users to confirm their email address after sign up, set this to true.
 requireConfirmedEmail: true
 
-# If REQUIRE_CONFIRMED_EMAIL is true, set this to the duration in which a user needs to confirm their email address.
+## If REQUIRE_CONFIRMED_EMAIL is true, set this to the duration in which a user needs to confirm their email address.
 allowUnconfirmedAccessFor: "1.days"
 
-# Settings for SMTP/email should be set
+## Settings for SMTP/email should be set
 smtp:
   domain: "your-domain-here.com"
   username: "you@gmail.com"
@@ -49,21 +84,55 @@ smtp:
   authentication: "plain"
   enableStartttlAuto: true
 
-# Set the email from huginn address
+## Set the email from huginn address
 emailFromAddress: "from_address@gmail.com"
 
-# OAuth Configuration
-# https://github.com/huginn/huginn/wiki/Configuring-OAuth-applications
+## OAuth Configuration
+## https://github.com/huginn/huginn/wiki/Configuring-OAuth-applications
 
 oauth:
-  twitterOauthKey: "fillout"
-  twitterOauthSecret: "fillout"
-  githubOauthKey: "fillout"
-  githubOauthSecret: "fillout"
+  twitter:
+    enabled: false
+    key: ""
+    secret: ""
+  thirty_seven_signals:
+    enabled: false
+    key: ""
+    secret: ""
+  github:
+    enabled: false
+    key: ""
+    secret: ""
+  tumblr:
+    enabled: false
+    key: ""
+    secret: ""
+  dropbox:
+    enabled: false
+    key: ""
+    secret: ""
+  wunderlist:
+    enabled: false
+    key: ""
+    secret: ""
+  evernote:
+    enabled: false
+    key: ""
+    secret: ""
+    # Set to true in development, false in production
+    use_sandbox: true
 
-#
-# This is pulled from here: https://github.com/huginn/huginn/blob/master/.env.example
-#
+# AWS Credentials for MTurk
+aws:
+  enabled: false
+  access_key_id: "your aws access key id"
+  access_key: "your aws access key"
+  # Set AWS_SANDBOX to true if you're developing Huginn code.
+  sandbox: false
+
+##
+## This is pulled from here: https://github.com/huginn/huginn/blob/master/.env.example
+##
 extraEnvs:
 #  - name: GITHUB_OAUTH_KEY
 #    value:
@@ -71,16 +140,16 @@ extraEnvs:
 #    value:
 
 serviceAccount:
-  # Specifies whether a service account should be created
+  ## Specifies whether a service account should be created
   create: true
-  # Annotations to add to the service account
+  ## Annotations to add to the service account
   annotations: {}
-  # The name of the service account to use.
-  # If not set and create is true, a name is generated using the fullname template
+  ## The name of the service account to use.
+  ## If not set and create is true, a name is generated using the fullname template
   name:
 
 podSecurityContext: {}
-  # fsGroup: 2000
+  ## fsGroup: 2000
 
 securityContext: {}
   # capabilities:
@@ -109,10 +178,10 @@ ingress:
   #      - chart-example.local
 
 resources: {}
-  # We usually recommend not to specify default resources and to leave this as a conscious
-  # choice for the user. This also increases chances charts run on environments with little
-  # resources, such as Minikube. If you do want to specify resources, uncomment the following
-  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  ## We usually recommend not to specify default resources and to leave this as a conscious
+  ## choice for the user. This also increases chances charts run on environments with little
+  ## resources, such as Minikube. If you do want to specify resources, uncomment the following
+  ## lines, adjust them as necessary, and remove the curly braces after 'resources:'.
   # limits:
   #   cpu: 100m
   #   memory: 128Mi
